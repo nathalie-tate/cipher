@@ -11,6 +11,22 @@ use ROT13 qw/rot13/;
 use Affine qw/affine/; 
 use Caesar qw/caesar/;
 
+my $words = "/usr/share/dict/words";
+
+my %dict;
+
+if ($words)
+{
+    open FH, "<$words";
+    while(<FH>)
+    {
+        chomp;
+        $dict{$_}++;
+    }
+}
+
+close FH;
+
 my @ciphertext;
 
 while(<>)
@@ -28,13 +44,25 @@ for my $text (@ciphertext)
     {
         for my $b (0..25)
         {
-            say "\$a=$a\t\$b=$b\t" . affine("d", $a, $b, $text);
+            my $result = affine("d", $a, $b, $text);
+            my $flag = "";
+            for (split / /, $result)
+            {
+                $flag = "\t" . "*" x 20 if exists $dict{$_} && length $_ > 2;
+            }
+            say "\$a=$a\t\$b=$b\t" . $result . $flag;
         }
     }
 
     say "CAESAR";
     for my $n (1..25)
     {
-        say "\$n=$n\t" . caesar($n, $text);
+        my $result = caesar($n, $text);
+        my $flag = "";
+        for (split / /, $result)
+        {
+            $flag = "\t" . "*" x 20 if exists $dict{$_} && length $_ > 2;
+        }
+        say "\$n=$n\t" . $result . $flag;
     }
 }
