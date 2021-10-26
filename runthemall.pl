@@ -21,7 +21,7 @@ if ($words)
     while(<FH>)
     {
         chomp;
-        $dict{$_}++;
+        $dict{lc $_}++;
     }
 }
 
@@ -48,7 +48,7 @@ for my $text (@ciphertext)
             my $flag = "";
             for (split / /, $result)
             {
-                $flag = "\t" . "*" x 20 if exists $dict{$_} && length $_ > 2;
+                $flag = "\t" . "*" x 20 if exists $dict{lc $_} && length $_ > 2;
             }
             say "\$a=$a\t\$b=$b\t" . $result . $flag;
         }
@@ -61,7 +61,7 @@ for my $text (@ciphertext)
         my $flag = "";
         for (split / /, $result)
         {
-            $flag = "\t" . "*" x 20 if exists $dict{$_} && length $_ > 2;
+            $flag = "\t" . "*" x 20 if exists $dict{lc $_} && length $_ > 2;
         }
         say "\$n=$n\t" . $result . $flag;
     }
